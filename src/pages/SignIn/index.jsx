@@ -3,7 +3,8 @@ import { Helmet } from "react-helmet";
 import { OtherBtn, OtherText, Input, OtherHeading } from "../../components";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -12,23 +13,32 @@ export default function SignIn() {
 
   const handleLogin = async () => {
     try {
-      const formData = new FormData();
-      formData.append("email", email);
-      formData.append("password", password);
+      // const formData = new FormData();
+      // formData.append("email", email);
+      // formData.append("password", password);
 
-      const response = await fetch("http://localhost:5080/login", {
+      // const response = await fetch("http://localhost:3000/login", {
+      //   method: "POST",
+      //   body: formData,
+      // });
+      const response = await axios("http://localhost:3000/login", {
         method: "POST",
-        body: formData,
+        data: {
+          email,
+          password,
+        },
       });
-
-      const data = await response.json();
-      if (response.ok) {
+      console.log(response);
+      // const data = await response.json();
+      if (response.status === 200) {
         toast.success("Login successful!");
         setTimeout(() => {
           navigate("/");
         }, 1500);
-      } else {
-        toast.error(data.message);
+      } else if(response.status === 500){
+        console.log(response.message);
+      }else {
+        toast.error(response.message);
       }
     } catch (error) {
       console.error("Error logging in:", error);
@@ -46,11 +56,12 @@ export default function SignIn() {
       </Helmet>
       <div className="flex w-full pl-[141px] pr-14 py-[141px] md:p-5 bg-red-700">
         <div className="flex flex-col items-start w-[52%] md:w-full mb-[75px] ml-[340px] gap-[45px] md:ml-0">
-          <a href="#">
+          <h1>
+            {" "}
             <OtherHeading size="5xl" as="h1" className="!font-poppins">
               Sign In
             </OtherHeading>
-          </a>
+          </h1>
           <div className="flex flex-col self-stretch items-center ml-[7px] md:ml-0">
             <OtherText
               size="s"

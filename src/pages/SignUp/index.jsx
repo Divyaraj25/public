@@ -4,6 +4,7 @@ import { OtherBtn, Text, Input, OtherHeading } from "../../components";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -14,25 +15,35 @@ export default function SignUp() {
 
   const handleRegister = async () => {
     try {
-      const formData = new FormData();
-      formData.append("email", email);
-      formData.append("username", username);
-      formData.append("contactNumber", contact);
-      formData.append("password", password);
+      // const formData = new FormData();
+      // formData.append("email", email);
+      // formData.append("username", username);
+      // formData.append("contactNumber", contact);
+      // formData.append("password", password);
+      console.log(email, username, contact, password);
+      // const response = await fetch("http://localhost:5080/register", {
+      //   method: "POST",
+      //   body: formData,
+      // });
 
-      const response = await fetch("http://localhost:5080/register", {
+      const response = await axios("http://localhost:3000/sign-up", {
         method: "POST",
-        body: formData,
-      });
-
-      const data = await response.json();
-      if (response.ok) {
+        data: {
+          email,
+          username,
+          contact,
+          password,
+        },
+      })
+      // const data = await response.json();
+      console.log(response);
+      if (response.status === 200) {
         toast.success("Register successful!");
         setTimeout(() => {
-          navigate("/");
+          navigate("/home");
         }, 1500);
       } else {
-        toast.error(data.message);
+        toast.error(response.message);
       }
     } catch (error) {
       console.error("Error logging in:", error);
@@ -50,11 +61,10 @@ export default function SignUp() {
       </Helmet>
       <div className="flex justify-center w-full px-14 py-[113px] md:p-5 bg-red-700">
         <div className="flex flex-col items-start w-[35%] md:w-full mb-2.5">
-          <a href="#">
-            <OtherHeading size="5xl" as="h1" className="!font-poppins">
+<h1>            <OtherHeading size="5xl" as="h1" className="!font-poppins">
               Sign UP
             </OtherHeading>
-          </a>
+    </h1>
           <Text size="s" as="p" className="mt-4 !text-black-900 !font-poly">
             Enter Your Email{" "}
           </Text>
